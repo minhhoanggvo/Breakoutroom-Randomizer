@@ -7,16 +7,49 @@
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+/* ── LIGHT MODE (default) ── */
 :root{
   --orange:#F37500;
-  --orange-dim:#FFF3E6;
   --text:#1D1D1F;
   --muted:#6E6E73;
   --border:#E5E5EA;
-  --bg:#F5F5F7;
-  --white:#fff;
+  --bg:#fce7f3;
+  --card:#ffffff;
+  --input:#FAFAFA;
+  --hover:#F5F5F7;
+  --badge-bg:#F0D8EA;
+  --badge-text:#6E6E73;
+  --shadow:rgba(0,0,0,.07);
+  --table-hover:#FAF0F6;
 }
-body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;padding:32px 16px 56px}
+
+/* ── DARK MODE ── */
+body.dark{
+  --text:#E8E8ED;
+  --muted:#98989D;
+  --border:#3A3A3C;
+  --bg:#1C1C1E;
+  --card:#2C2C2E;
+  --input:#3A3A3C;
+  --hover:#3A3A3C;
+  --badge-bg:#3A3A3C;
+  --badge-text:#98989D;
+  --shadow:rgba(0,0,0,.4);
+  --table-hover:#38383A;
+}
+
+body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;padding:32px 16px 56px;transition:background .25s,color .25s}
+
+/* ── MODE TOGGLE ── */
+.mode-toggle{
+  position:fixed;top:16px;right:16px;z-index:999;
+  width:40px;height:40px;border-radius:50%;border:1.5px solid var(--border);
+  background:var(--card);color:var(--text);font-size:18px;
+  cursor:pointer;display:flex;align-items:center;justify-content:center;
+  box-shadow:0 2px 8px var(--shadow);transition:background .25s,border-color .25s;
+}
+.mode-toggle:hover{border-color:var(--orange)}
 
 /* ── FORM PAGE ── */
 .form-page{max-width:600px;margin:0 auto}
@@ -24,7 +57,7 @@ body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);min-
 h1{font-size:30px;font-weight:800;line-height:1.25;margin-bottom:6px}
 h1 em{font-style:normal;color:var(--orange)}
 .subtitle{font-size:15px;color:var(--muted);font-weight:600;margin-bottom:28px;line-height:1.55}
-.card{background:var(--white);border-radius:20px;padding:28px;box-shadow:0 2px 16px rgba(0,0,0,.07)}
+.card{background:var(--card);border-radius:20px;padding:28px;box-shadow:0 2px 16px var(--shadow);transition:background .25s}
 .section-label{font-size:11px;font-weight:800;letter-spacing:.8px;text-transform:uppercase;color:var(--muted);border-bottom:1.5px solid var(--border);padding-bottom:8px;margin:24px 0 16px}
 .section-label:first-child{margin-top:0}
 .row{display:grid;grid-template-columns:1fr 1fr;gap:16px}
@@ -32,17 +65,18 @@ h1 em{font-style:normal;color:var(--orange)}
 .fg:last-child{margin-bottom:0}
 .fg.full{grid-column:1/-1}
 label{font-size:13px;font-weight:700;color:var(--muted);display:flex;align-items:center;gap:6px}
-.badge{font-size:11px;font-weight:600;color:#AEAEB2;background:#F5F5F7;padding:2px 8px;border-radius:10px}
+.badge{font-size:11px;font-weight:600;color:var(--badge-text);background:var(--badge-bg);padding:2px 8px;border-radius:10px}
 input[type=text],input[type=number],textarea{
   border:1.5px solid var(--border);border-radius:10px;padding:10px 14px;
   font-family:'Nunito',sans-serif;font-size:15px;color:var(--text);
-  background:#FAFAFA;outline:none;width:100%;
-  transition:border-color .15s,box-shadow .15s,background .15s
+  background:var(--input);outline:none;width:100%;
+  transition:border-color .15s,box-shadow .15s,background .25s,color .25s
 }
-input:focus,textarea:focus{border-color:var(--orange);box-shadow:0 0 0 3px rgba(243,117,0,.12);background:#fff}
+input:focus,textarea:focus{border-color:var(--orange);box-shadow:0 0 0 3px rgba(243,117,0,.15);background:var(--card)}
 textarea{resize:vertical;min-height:96px;line-height:1.6}
-.hint{font-size:12px;color:#AEAEB2;font-weight:600}
+.hint{font-size:12px;color:var(--muted);font-weight:600}
 .err{background:#FFF0EE;border:1.5px solid #FFBDBD;border-radius:12px;padding:12px 16px;font-size:14px;font-weight:600;color:#C0392B;margin-top:16px;display:none;line-height:1.6}
+body.dark .err{background:#3D1A1A;border-color:#7A3A3A;color:#FF8A8A}
 .btn-primary{
   display:flex;align-items:center;justify-content:center;gap:8px;
   width:100%;padding:14px 20px;margin-top:20px;border:none;border-radius:12px;
@@ -58,33 +92,30 @@ textarea{resize:vertical;min-height:96px;line-height:1.6}
 .topbar h2{font-size:22px;font-weight:800}
 .topbar-actions{display:flex;gap:10px}
 .btn-sm{
-  padding:8px 16px;border:1.5px solid var(--border);border-radius:10px;background:#fff;
+  padding:8px 16px;border:1.5px solid var(--border);border-radius:10px;background:var(--card);
   font-family:'Nunito',sans-serif;font-size:14px;font-weight:700;cursor:pointer;color:var(--text);
-  transition:background .15s
+  transition:background .15s,border-color .15s
 }
-.btn-sm:hover{background:var(--bg)}
-/* week tabs */
+.btn-sm:hover{background:var(--hover)}
 .week-tabs{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:24px}
 .wtab{
-  padding:7px 16px;border-radius:20px;border:1.5px solid var(--border);background:#fff;
+  padding:7px 16px;border-radius:20px;border:1.5px solid var(--border);background:var(--card);
   font-family:'Nunito',sans-serif;font-size:14px;font-weight:700;cursor:pointer;color:var(--muted);
   transition:all .15s
 }
 .wtab:hover:not(.active){border-color:var(--orange);color:var(--orange)}
 .wtab.active{background:var(--orange);border-color:var(--orange);color:#fff}
-/* room cards */
 .rooms-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:16px}
-.room-card{background:#fff;border-radius:16px;border:2px solid transparent;box-shadow:0 2px 10px rgba(0,0,0,.06);display:flex;flex-direction:column;overflow:hidden}
+.room-card{background:var(--card);border-radius:16px;border:2px solid transparent;box-shadow:0 2px 10px var(--shadow);display:flex;flex-direction:column;overflow:hidden;transition:background .25s}
 .room-card.is-teacher{border-color:var(--orange)}
 .rhead{padding:14px 16px 12px}
 .chip{display:inline-flex;align-items:center;gap:6px;padding:5px 12px 5px 6px;border-radius:20px;font-size:14px;font-weight:700;max-width:100%}
-.chip .av{width:22px;height:22px;border-radius:50%;background:rgba(255,255,255,.5);display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0}
+.chip .av{width:22px;height:22px;border-radius:50%;background:rgba(255,255,255,.25);display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0}
 .chip .nm{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .rbody{padding:4px 16px 8px;flex:1}
-.srow{padding:7px 0;font-size:14px;font-weight:600;border-bottom:1px solid var(--bg)}
+.srow{padding:7px 0;font-size:14px;font-weight:600;border-bottom:1px solid var(--bg);color:var(--text)}
 .srow:last-child{border-bottom:none}
-.rfoot{padding:10px 16px 14px;font-size:12px;font-weight:700;color:#AEAEB2}
-/* chip colours */
+.rfoot{padding:10px 16px 14px;font-size:12px;font-weight:700;color:var(--muted)}
 .c0{background:#FFF0E6;color:#C84B00}
 .c1{background:#E6F0FF;color:#1A56DB}
 .c2{background:#F0E6FF;color:#7C3AED}
@@ -92,17 +123,24 @@ textarea{resize:vertical;min-height:96px;line-height:1.6}
 .c4{background:#FFFBE6;color:#D97706}
 .c5{background:#FFE6F0;color:#DB2777}
 .c6{background:#E6FFFF;color:#0891B2}
-/* stats */
-.stats{margin-top:24px;background:#fff;border-radius:16px;padding:20px 24px;box-shadow:0 2px 10px rgba(0,0,0,.06);overflow-x:auto}
+body.dark .c0{background:#3D2010;color:#FF8C42}
+body.dark .c1{background:#102040;color:#60A5FA}
+body.dark .c2{background:#2A1A40;color:#C084FC}
+body.dark .c3{background:#0A2A1A;color:#34D399}
+body.dark .c4{background:#2A2000;color:#FCD34D}
+body.dark .c5{background:#3A0A20;color:#F472B6}
+body.dark .c6{background:#0A2A2A;color:#22D3EE}
+.stats{margin-top:24px;background:var(--card);border-radius:16px;padding:20px 24px;box-shadow:0 2px 10px var(--shadow);overflow-x:auto;transition:background .25s}
 .stats-title{font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);margin-bottom:14px}
 .dtable{width:100%;border-collapse:collapse;font-size:13px;white-space:nowrap}
 .dtable th{text-align:left;padding:6px 12px;font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);border-bottom:1.5px solid var(--border)}
-.dtable td{padding:6px 12px;border-bottom:1px solid var(--bg);font-weight:600}
-.dtable td.cnt{text-align:center;font-weight:800;border-radius:6px}
-.dtable td.zero{color:#C7C7CC}
+.dtable td{padding:6px 12px;border-bottom:1px solid var(--border);font-weight:600;color:var(--text)}
+.dtable td.cnt{text-align:center;font-weight:800}
+.dtable td.zero{color:var(--muted)}
 .dtable td.low{color:var(--orange)}
 .dtable td.ok{color:#059669}
-.dtable tbody tr:hover td{background:#FAFAFA}
+body.dark .dtable td.ok{color:#34D399}
+.dtable tbody tr:hover td{background:var(--table-hover)}
 @media(max-width:600px){
   body{padding:20px 12px 40px}
   h1{font-size:24px}
@@ -112,7 +150,7 @@ textarea{resize:vertical;min-height:96px;line-height:1.6}
 }
 @media(max-width:400px){.rooms-grid{grid-template-columns:1fr}}
 @media print{
-  .topbar-actions,.week-tabs,.stats{display:none!important}
+  .topbar-actions,.week-tabs,.stats,.mode-toggle{display:none!important}
   .output-page{max-width:100%}
   .room-card{break-inside:avoid}
 }
@@ -120,12 +158,13 @@ textarea{resize:vertical;min-height:96px;line-height:1.6}
 </head>
 <body>
 
+<button class="mode-toggle" id="modeBtn" onclick="toggleMode()" title="Chuyển chế độ sáng/tối">🌙</button>
+
 <!-- FORM PAGE -->
 <div class="form-page" id="formPage">
   <div class="logo-pill">YouPass</div>
   <h1>Breakout Room <em>Randomizer</em></h1>
   <p class="subtitle">Phân học sinh vào breakout room tự động — đảm bảo công bằng và không gặp lại giáo viên/TA tuần trước</p>
-
   <div class="card">
     <div class="section-label">Người hướng dẫn</div>
     <div class="row">
@@ -143,7 +182,6 @@ textarea{resize:vertical;min-height:96px;line-height:1.6}
       <textarea id="regularTAs" placeholder="Hạnh Nguyên&#10;Mai Hân" rows="3"></textarea>
       <span class="hint" id="taHint">Nhập đúng (số room − 2) TA</span>
     </div>
-
     <div class="section-label">Lớp học &amp; Cài đặt</div>
     <div class="row">
       <div class="fg">
@@ -160,7 +198,6 @@ textarea{resize:vertical;min-height:96px;line-height:1.6}
       <textarea id="students" style="min-height:130px"
         placeholder="Cẩm Tú&#10;Tuyết&#10;Lam Uyên&#10;Thoa&#10;Mỹ Hân&#10;Thảo Ngân&#10;Trung&#10;Minh Ngọc&#10;Bảo Hân&#10;Quyên&#10;Thanh Giang&#10;Ngọc Hân&#10;Ngọc Anh&#10;Gia Hân"></textarea>
     </div>
-
     <div class="err" id="errBanner"></div>
     <button class="btn-primary" onclick="handleGenerate()">Tạo lịch phân phòng →</button>
   </div>
@@ -182,13 +219,25 @@ textarea{resize:vertical;min-height:96px;line-height:1.6}
   <div class="week-tabs" id="weekTabs"></div>
   <div class="rooms-grid" id="roomsGrid"></div>
   <div class="stats">
-    <div class="stats-title" id="statsTitle">Số lần vào phòng giáo viên (tổng toàn khoá)</div>
-    <div class="stats-grid" id="statsGrid"></div>
+    <div class="stats-title" id="statsTitle">Phân bổ gặp gỡ</div>
+    <div id="statsGrid"></div>
   </div>
 </div>
 
 <script>
-// ── Helpers ──────────────────────────────────────────────────────────────────
+// ── Dark / Light mode ─────────────────────────────────────────────────────────
+function applyMode(dark){
+  document.body.classList.toggle('dark', dark);
+  document.getElementById('modeBtn').textContent = dark ? '☀️' : '🌙';
+}
+function toggleMode(){
+  const isDark = !document.body.classList.contains('dark');
+  localStorage.setItem('darkMode', isDark);
+  applyMode(isDark);
+}
+applyMode(localStorage.getItem('darkMode') === 'true');
+
+// ── Helpers ───────────────────────────────────────────────────────────────────
 function shuffle(arr){
   const a=[...arr];
   for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}
@@ -197,23 +246,17 @@ function shuffle(arr){
 function esc(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
 
 // ── Room size calculator ──────────────────────────────────────────────────────
-// Rules: teacher == starTA size > each regular size
 function computeSizes(S, R){
   const nr = R-2;
-  if(nr<=0){
-    const t=Math.ceil(S/2);
-    return {t, s:S-t, reg:[]};
-  }
-  // Find smallest T: teacher=starTA=T, regular rooms share S-2T each < T
+  if(nr<=0){ const t=Math.ceil(S/2); return {t, s:S-t, reg:[]}; }
   for(let T=Math.ceil(S/R); T<=S; T++){
     const rem = S - 2*T;
-    if(rem < nr) break;               // can't give 1 student per regular room
-    if(rem <= nr*(T-1)){              // each regular room ≤ T-1 ✓
+    if(rem < nr) break;
+    if(rem <= nr*(T-1)){
       const base=Math.floor(rem/nr), extra=rem%nr;
       return {t:T, s:T, reg:Array.from({length:nr},(_,i)=>base+(i<extra?1:0))};
     }
   }
-  // Fallback: even distribution, teacher & starTA get extras first
   const base=Math.floor(S/R), extra=S%R;
   return {
     t: base+(extra>=1?1:0),
@@ -229,66 +272,39 @@ function generateSchedule(teacher, starTA, regularTAs, students, numWeeks, numRo
   const roomSizes = [sz.t, sz.s, ...sz.reg];
   const leaders   = [teacher, starTA, ...regularTAs.slice(0,nr)];
   const S = students.length;
-
-  // Tỉ lệ kỳ vọng mỗi học sinh gặp từng leader (tỉ lệ theo room size)
-  // Nếu teacher=starTA=T và regular=r, thì roomFraction[teacher]=T/S=roomFraction[starTA]
-  // → học sinh kỳ vọng gặp teacher và starTA đều nhau; gặp các TA đều nhau
   const roomFraction = roomSizes.map(sz => sz / S);
-
-  // leaderVisits[s][ri] = số lần học sinh s đã gặp leader ri
   const leaderVisits={}, lastLeader={};
   students.forEach(s=>{ leaderVisits[s]=Array(numRooms).fill(0); lastLeader[s]=-1; });
-
   const schedule=[];
-
   for(let week=0; week<numWeeks; week++){
-    // ── Global deficit assignment ──────────────────────────────────────────
-    // Với mỗi cặp (học sinh, room), tính "deficit" = kỳ vọng − thực tế
-    // deficit > 0 → học sinh chưa gặp đủ leader này → ưu tiên cao
-    // Sắp xếp tất cả cặp hợp lệ theo deficit giảm dần, rồi greedy assign
-
     const capacity = [...roomSizes];
     const roomStudents = Array.from({length:numRooms},()=>[]);
     const assigned = new Set();
-
     const pairs=[];
     students.forEach(s=>{
       for(let ri=0; ri<numRooms; ri++){
-        if(lastLeader[s]===ri) continue;           // vi phạm quy tắc không lặp
-        const expected = week * roomFraction[ri];  // số lần kỳ vọng tính đến tuần này
-        const deficit  = expected - leaderVisits[s][ri] + Math.random()*0.001; // noise nhỏ để tránh deterministic
+        if(lastLeader[s]===ri) continue;
+        const expected = week * roomFraction[ri];
+        const deficit  = expected - leaderVisits[s][ri] + Math.random()*0.001;
         pairs.push({s, ri, deficit});
       }
     });
-
-    // Ưu tiên cặp có deficit cao nhất → học sinh "nợ" gặp leader này nhiều nhất
     pairs.sort((a,b)=>b.deficit-a.deficit);
-
     for(const {s,ri} of pairs){
       if(assigned.has(s)) continue;
       if(capacity[ri]<=0) continue;
-      assigned.add(s);
-      capacity[ri]--;
-      roomStudents[ri].push(s);
+      assigned.add(s); capacity[ri]--; roomStudents[ri].push(s);
     }
-
-    // Xử lý học sinh chưa được phân (relax ràng buộc không lặp)
     students.forEach(s=>{
       if(assigned.has(s)) return;
       for(let ri=0; ri<numRooms; ri++){
         if(capacity[ri]>0){ assigned.add(s); capacity[ri]--; roomStudents[ri].push(s); break; }
       }
     });
-
     const rooms = roomSizes.map((size,i)=>({leader:leaders[i], size, students:roomStudents[i]}));
-
-    // Cập nhật tracking
-    rooms.forEach((room,ri)=>{
-      room.students.forEach(s=>{ lastLeader[s]=ri; leaderVisits[s][ri]++; });
-    });
+    rooms.forEach((room,ri)=>{ room.students.forEach(s=>{ lastLeader[s]=ri; leaderVisits[s][ri]++; }); });
     schedule.push(rooms);
   }
-
   const teacherVisits={};
   students.forEach(s=>teacherVisits[s]=leaderVisits[s][0]);
   return {schedule, teacherVisits, leaderVisits, leaders};
@@ -301,10 +317,9 @@ const ST={
   schedule:[], teacherVisits:{}, leaderVisits:{}, leaders:[], week:0
 };
 
-// ── Input hint update ─────────────────────────────────────────────────────────
+// ── Input hints ───────────────────────────────────────────────────────────────
 document.getElementById('numRooms').addEventListener('input',function(){
-  const n=Math.max(2,parseInt(this.value)||4);
-  const need=n-2;
+  const n=Math.max(2,parseInt(this.value)||4), need=n-2;
   document.getElementById('taHint').textContent =
     need===0 ? 'Không cần TA khi chỉ có 2 room'
              : `Nhập đúng ${need} TA (= số room − 2)`;
@@ -318,11 +333,9 @@ function handleGenerate(){
   const stuRaw    = document.getElementById('students').value;
   const numWeeks  = Math.max(1, parseInt(document.getElementById('numWeeks').value)||9);
   const numRooms  = Math.max(2, parseInt(document.getElementById('numRooms').value)||4);
-
   const regularTAs = taRaw.split('\n').map(s=>s.trim()).filter(Boolean);
   const students   = stuRaw.split('\n').map(s=>s.trim()).filter(Boolean);
   const nr = numRooms-2;
-
   const errs=[];
   if(!teacher)  errs.push('Chưa nhập tên giáo viên.');
   if(!starTA)   errs.push('Chưa nhập tên TA ngôi sao.');
@@ -330,22 +343,13 @@ function handleGenerate(){
     errs.push(`Cần đúng ${nr} TA — hiện có ${regularTAs.length}.`);
   if(students.length<numRooms)
     errs.push(`Số học sinh (${students.length}) phải ≥ số room (${numRooms}).`);
-
   const banner=document.getElementById('errBanner');
   if(errs.length){banner.innerHTML=errs.join('<br>');banner.style.display='block';return;}
   banner.style.display='none';
-
   Object.assign(ST,{teacher,starTA,regularTAs,students,numWeeks,numRooms,week:0});
-  runGen();
-  showOutput();
+  runGen(); showOutput();
 }
-
-function handleReshuffle(){
-  ST.week=0;
-  runGen();
-  renderTabs(); renderRooms(); renderStats();
-}
-
+function handleReshuffle(){ ST.week=0; runGen(); renderTabs(); renderRooms(); renderStats(); }
 function runGen(){
   const r=generateSchedule(ST.teacher,ST.starTA,ST.regularTAs,ST.students,ST.numWeeks,ST.numRooms);
   ST.schedule=r.schedule; ST.teacherVisits=r.teacherVisits;
@@ -367,7 +371,6 @@ function handleReset(){
 // ── Rendering ─────────────────────────────────────────────────────────────────
 const CHIPS =['c0','c1','c2','c3','c4','c5','c6'];
 const AVATARS=['👤','⭐','📋','📝','📌','🔖','📎'];
-
 function renderTabs(){
   const el=document.getElementById('weekTabs');
   el.innerHTML='';
@@ -375,15 +378,10 @@ function renderTabs(){
     const b=document.createElement('button');
     b.className='wtab'+(wi===ST.week?' active':'');
     b.textContent=`W${wi+1}`;
-    b.onclick=()=>{
-      ST.week=wi;
-      document.querySelectorAll('.wtab').forEach((t,i)=>t.classList.toggle('active',i===wi));
-      renderRooms();
-    };
+    b.onclick=()=>{ ST.week=wi; document.querySelectorAll('.wtab').forEach((t,i)=>t.classList.toggle('active',i===wi)); renderRooms(); };
     el.appendChild(b);
   });
 }
-
 function renderRooms(){
   const grid=document.getElementById('roomsGrid');
   grid.innerHTML='';
@@ -393,32 +391,21 @@ function renderRooms(){
     const card=document.createElement('div');
     card.className='room-card'+(ri===0?' is-teacher':'');
     card.innerHTML=`
-      <div class="rhead">
-        <span class="chip ${cc}">
-          <span class="av">${av}</span>
-          <span class="nm">${esc(room.leader)}</span>
-        </span>
-      </div>
-      <div class="rbody">
-        ${room.students.map(s=>`<div class="srow">${esc(s)}</div>`).join('')}
-      </div>
+      <div class="rhead"><span class="chip ${cc}"><span class="av">${av}</span><span class="nm">${esc(room.leader)}</span></span></div>
+      <div class="rbody">${room.students.map(s=>`<div class="srow">${esc(s)}</div>`).join('')}</div>
       <div class="rfoot">BOR ${ri+1} · ${room.students.length} học sinh</div>`;
     grid.appendChild(card);
   });
 }
-
 function renderStats(){
   const {students, leaders, leaderVisits, numWeeks, numRooms} = ST;
   const expected = (numWeeks / numRooms).toFixed(1);
-
   document.getElementById('statsTitle').textContent =
     `Phân bổ gặp gỡ — kỳ vọng mỗi bạn gặp mỗi người ~${expected} lần`;
-
   const CHIP_COLORS = ['c0','c1','c2','c3','c4','c5','c6'];
   const headerCells = leaders.map((l,i)=>
     `<th><span class="chip ${CHIP_COLORS[i]||'c0'}" style="padding:3px 10px;font-size:11px">${esc(l)}</span></th>`
   ).join('');
-
   const rows = students.map(s=>{
     const cells = leaders.map((_,ri)=>{
       const v = leaderVisits[s][ri];
@@ -427,7 +414,6 @@ function renderStats(){
     }).join('');
     return `<tr><td>${esc(s)}</td>${cells}</tr>`;
   }).join('');
-
   document.getElementById('statsGrid').innerHTML = `
     <table class="dtable">
       <thead><tr><th>Học sinh</th>${headerCells}</tr></thead>
